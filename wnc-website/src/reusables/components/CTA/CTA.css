@@ -1,0 +1,139 @@
+.cta {
+  padding: 5rem 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-gradient {
+  background: linear-gradient(135deg, #0070f3 0%, #1e40af 100%);
+  color: #fff;
+}
+
+.cta-light {
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+.cta-dark {
+  background-color: #1e293b;
+  color: #fff;
+}
+
+.cta-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.cta-content {
+  max-width: 60%;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.cta-subtitle {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.cta-action {
+  margin-left: 2rem;
+}
+
+.cta-button {
+  display: inline-block;
+  background-color: #fff;
+  color: #0070f3;
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.cta-light .cta-button {
+  background-color: #0070f3;
+  color: #fff;
+}
+
+.cta-dark .cta-button {
+  background-color: #fff;
+  color: #1e293b;
+}
+
+.cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.2);
+}
+
+.cta-light .cta-button:hover {
+  background-color: #0060df;
+  color: #fff;
+}
+
+.cta-dark .cta-button:hover {
+  background-color: #f8fafc;
+  color: #0070f3;
+}
+
+.cta-gradient::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/assets/pattern.svg');
+  background-repeat: repeat;
+  opacity: 0.1;
+}
+
+@media screen and (max-width: 992px) {
+  .cta-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .cta-content {
+    max-width: 100%;
+    margin-bottom: 2rem;
+  }
+  
+  .cta-action {
+    margin-left: 0;
+  }
+  
+  .cta-title {
+    font-size: 2rem;
+  }
+  
+  .cta-subtitle {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .cta {
+    padding: 3rem 1.5rem;
+  }
+  
+  .cta-title {
+    font-size: 1.8rem;
+  }
+  
+  .cta-button {
+    padding: 0.8rem 1.8rem;
+  }
+}
