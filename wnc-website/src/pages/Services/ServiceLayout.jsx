@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './ServiceLayout.css';
 import Hero from '../../reusables/components/Hero/Hero';
 import CTA from '../../reusables/components/CTA/CTA';
-import { Checkmark, ArrowRight } from '@carbon/icons-react';
+import { Checkmark, ArrowRight, Add, Subtract } from '@carbon/icons-react';
 
 const ServiceLayout = ({ 
   title,
@@ -20,12 +20,31 @@ const ServiceLayout = ({
 }) => {
   return (
     <div className="service-page">
-      <Hero 
-        title={title}
-        subtitle={subtitle}
-        showButtons={true}
-        backgroundImage={heroImage}
-      />
+      <div className="custom-hero" style={{ backgroundImage: `url(${heroImage})` }}>
+        <div className="custom-hero-overlay">
+          <div className="hero-pattern"></div>
+        </div>
+        <div className="custom-hero-content">
+          <h1 className="animated-title">{title}</h1>
+          <p className="animated-subtitle">{subtitle}</p>
+          <div className="hero-buttons">
+            <Link to="/contact" className="btn btn-primary">
+              Book a Consultation
+            </Link>
+            <Link to="/services" className="btn btn-secondary">
+              Explore Our Services
+            </Link>
+          </div>
+          {/* <div className="hero-scroll-indicator">
+            <div className="mouse">
+              <div className="wheel"></div>
+            </div>
+            <div>
+              <span className="scroll-text">Scroll down</span>
+            </div>
+          </div> */}
+        </div>
+      </div>
 
       {/* Service Overview */}
       <section className="service-overview">
@@ -39,15 +58,19 @@ const ServiceLayout = ({
 
             {features && features.length > 0 && (
               <div className="service-features">
-                <h3>Key Features</h3>
-                <ul className="features-list">
+                <h3 className="features-title">Key Features</h3>
+                <div className="features-list">
                   {features.map((feature, index) => (
-                    <li key={index}>
-                      <Checkmark className="feature-icon" />
-                      <span>{feature}</span>
-                    </li>
+                    <div key={index} className="feature-card">
+                      <div className="feature-icon-container">
+                        <Checkmark className="feature-icon" />
+                      </div>
+                      <div className="feature-content">
+                        <span>{feature}</span>
+                      </div>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
           </div>
@@ -83,13 +106,26 @@ const ServiceLayout = ({
         <section className="service-faqs">
           <div className="container">
             <h2 className="section-title">Frequently Asked Questions</h2>
-            <div className="faqs-list">
-              {faqs.map((faq, index) => (
-                <div className="faq-item" key={index}>
-                  <h3 className="faq-question">{faq.question}</h3>
-                  <div className="faq-answer" dangerouslySetInnerHTML={{ __html: faq.answer }} />
-                </div>
-              ))}
+            <div className="faqs-container">
+              {faqs.map((faq, index) => {
+                const [isOpen, setIsOpen] = useState(index === 0);
+                return (
+                  <div className={`faq-item ${isOpen ? 'active' : ''}`} key={index}>
+                    <div 
+                      className="faq-question-container" 
+                      onClick={() => setIsOpen(!isOpen)}
+                    >
+                      <h3 className="faq-question">{faq.question}</h3>
+                      <button className="faq-toggle">
+                        {isOpen ? <Subtract size={20} /> : <Add size={20} />}
+                      </button>
+                    </div>
+                    <div className={`faq-answer-container ${isOpen ? 'open' : ''}`}>
+                      <div className="faq-answer" dangerouslySetInnerHTML={{ __html: faq.answer }} />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>

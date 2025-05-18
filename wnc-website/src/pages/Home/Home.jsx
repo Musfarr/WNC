@@ -41,7 +41,7 @@ const Home = () => {
   // Hero component with animated elements and creative design
   const Hero = () => (
     <section className="hero-section">
-      <div className="hero-background">
+      <div className="hero-bacground">
         <div className="animated-shape shape1"></div>
         <div className="animated-shape shape2"></div>
         <div className="animated-shape shape3"></div>

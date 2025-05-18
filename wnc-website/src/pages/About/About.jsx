@@ -209,7 +209,7 @@ const About = () => {
       </section>
       
       {/* CTA Section */}
-      <section className="about-cta">
+      <section className="about-cta" style={{ paddingBottom: '0' }}>
         <CTA 
           title="Ready to transform your business?"
           subtitle="Schedule a free consultation with our experts today."

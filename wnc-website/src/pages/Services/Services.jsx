@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Services.css';
 import { Link } from 'react-router-dom';
 import {
@@ -7,6 +7,9 @@ import {
   DocumentSigned,
   ChartNetwork,
   Development,
+  ArrowRight,
+  ArrowLeft,
+  ChevronDown
 } from '@carbon/icons-react';
 
 const Services = () => {
@@ -67,18 +70,102 @@ const Services = () => {
     }
   ];
 
+  // Custom slider functionality
+  const sliderRef = useRef(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const totalSlides = services.length;
+  
+  const nextSlide = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+    setTimeout(() => setIsAnimating(false), 600);
+  };
+  
+  const prevSlide = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+    setTimeout(() => setIsAnimating(false), 600);
+  };
+  
+  // Disable auto-sliding for now to avoid potential issues
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     nextSlide();
+  //   }, 6000);
+  //   return () => clearInterval(interval);
+  // }, [currentSlide]);
+
+  // Parallax effect for hero section
+  const [scrollY, setScrollY] = useState(0);
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="services-page">
-      {/* Services Hero */}
+      {/* Enhanced Services Hero */}
       <section className="services-hero">
+        <div className="hero-background" style={{ transform: `translateY(${scrollY * 0.4}px)` }}></div>
         <div className="overlay"></div>
-        <div className="container">
-          <div className="hero-content">
-            <h6 className="hero-subtitle">OUR SERVICES</h6>
-            <h1 className="hero-title">Comprehensive <span className="text-gradient">Business Solutions</span></h1>
-            <p className="hero-description">We provide a wide range of services designed to help your business establish, grow, and succeed globally.</p>
+        
+        {/* Animated geometric shapes */}
+        <div className="hero-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+          <div className="shape shape-4"></div>
+        </div>
+        
+        {/* Subtle grid pattern */}
+        <div className="hero-grid"></div>
+        
+        <div className="container hero-container">
+          <div className="hero-content-wrapper">
+            <div className="hero-content">
+              {/* <div className="hero-badge">INNOVATIVE SOLUTIONS</div> */}
+              <h1 className="hero-title">
+                <div className="title-accent"></div>
+                <span className="hero-title-line">Transform Your</span>
+                <span className="hero-title-line">Business <span className="text-gradient">Vision</span></span>
+                <span className="hero-title-line">Into Reality</span>
+              </h1>
+              {/* <p className="hero-description">We provide comprehensive business solutions designed to help your company establish, grow, and succeed in today's competitive global market.</p> */}
+              <div className="hero-buttons">
+                <Link to="/contact" className="btn-hero-primary">Get Started</Link>
+                <a href="#services-overvew" className="btn-hero-secondary">
+                  Explore Services <ChevronDown size={20} />
+                </a>
+              </div>
+            </div>
+            
+            {/* <div className="hero-image-container">
+              <div className="hero-image-wrapper">
+                <div className="hero-image-accent"></div>
+                <div className="hero-image"></div>
+              </div>
+              <div className="hero-stats">
+                <div className="stat-item">
+                  <span className="stat-number">500+</span>
+                  <span className="stat-label">Clients</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-number">98%</span>
+                  <span className="stat-label">Success Rate</span>
+                </div>
+              </div>
+            </div> */}
           </div>
         </div>
+        
         <div className="hero-waves">
           <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
             <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" className="shape-fill"></path>
@@ -87,7 +174,7 @@ const Services = () => {
       </section>
 
       {/* Services Overview */}
-      <section className="services-overview">
+      <section id="services-overvew" className="services-ovview">
         <div className="container">
           <div className="section-header">
             <h6 className="section-subtitle">WHAT WE OFFER</h6>
@@ -105,20 +192,24 @@ const Services = () => {
                 <div className="service-image">
                   <img src={service.image} alt={service.title} />
                   <div className="image-overlay"></div>
+                  <div className="service-icon-wrapper">
+                    <service.icon size={32} className="service-icon-svg" />
+                  </div>
                 </div>
                 <div className="service-content">
                   <h3 className="service-title">{service.title}</h3>
                   <p className="service-description">{service.description}</p>
                   <ul className="service-features">
                     {service.features.map((feature, index) => (
-                      <li key={index}>{feature}</li>
+                      <li key={index}>
+                        <span className="feature-bullet"></span>
+                        {feature}
+                      </li>
                     ))}
                   </ul>
                   <Link to={service.link} className="btn-learn-more">
                     Learn More 
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <ArrowRight size={20} />
                   </Link>
                 </div>
               </div>
