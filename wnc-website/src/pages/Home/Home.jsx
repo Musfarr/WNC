@@ -115,7 +115,7 @@ const Home = () => {
 
   // Call to Action component
   const CTA = () => (
-    <section className="cta-section">
+    <section className="cta-section" style={{ marginTop: '0' }}>
       <div className="container">
         <div className="cta-content">
           <h2>Ready to grow your business?</h2>
