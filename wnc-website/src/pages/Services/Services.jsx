@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import './Services.css';
 import { Link } from 'react-router-dom';
+import servicesData from './servicesData';
 import {
   Enterprise,
   Finance,
@@ -8,104 +9,36 @@ import {
   ChartNetwork,
   Development,
   ArrowRight,
-  ArrowLeft,
   ChevronDown
 } from '@carbon/icons-react';
 
 const Services = () => {
-  const services = [
-    {
-      id: 1,
-      title: 'Company Formation',
-      description: 'Register your business legally across different regions including UAE, UK, and US with our comprehensive formation services.',
-      icon: Enterprise,
-      link: '/services/company-formation',
-      image: 'https://images.unsplash.com/photo-1664575599618-8f6bd76fc670?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      features: ['Company Registration', 'Documentation Management', 'Regulatory Compliance', 'Legal Structure Advice']
-    },
-    {
-      id: 2,
-      title: 'Business Banking',
-      description: 'Set up your business banking seamlessly with our partnerships with leading financial institutions worldwide.',
-      icon: Finance,
-      link: '/services/business-banking',
-      image: 'https://images.unsplash.com/photo-1616803689943-5601631c7fec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      features: ['Business Account Setup', 'Multi-Currency Solutions', 'Payment Gateway Integration', 'Financial Advisory']
-    },
-    {
-      id: 3,
-      title: 'Legal Services',
-      description: 'Navigate complex legal challenges with our expert team specializing in business law, contracts, IP protection, and compliance.',
-      icon: DocumentSigned,
-      link: '/services/legal-services',
-      image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      features: ['Contract Drafting', 'IP Protection', 'Compliance Management', 'Legal Consultation']
-    },
-    {
-      id: 4,
-      title: 'Branding & Development',
-      description: 'Create a stunning brand identity and professional website that effectively showcases your business to the world.',
-      icon: Development,
-      link: '/services/branding-development',
-      image: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      features: ['Brand Strategy', 'Visual Identity Design', 'Website Development', 'Content Creation']
-    },
-    {
-      id: 5,
-      title: 'Marketing Services',
-      description: 'Expand your reach with our digital marketing, social media management, SEO, and targeted advertising strategies.',
-      icon: ChartNetwork,
-      link: '/services/marketing',
-      image: 'https://images.unsplash.com/photo-1533750516457-a7f992034fec?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      features: ['Digital Marketing', 'Social Media Management', 'SEO Optimization', 'Content Strategy']
-    },
-    {
-      id: 6,
-      title: 'Accounting & VAT',
-      description: 'Keep your finances in order with our comprehensive accounting, bookkeeping, and tax compliance services.',
-      icon: Finance,
-      link: '/services/accounting',
-      image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      features: ['Bookkeeping', 'VAT Registration', 'Tax Compliance', 'Financial Reporting']
-    }
-  ];
+  // Extract unique categories from data
+  const categories = useMemo(() => {
+    const cats = servicesData.map(s => s.category);
+    return ['All', ...Array.from(new Set(cats))];
+  }, []);
 
-  // Custom slider functionality
-  const sliderRef = useRef(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const totalSlides = services.length;
-  
-  const nextSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
-    setTimeout(() => setIsAnimating(false), 600);
-  };
-  
-  const prevSlide = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
-    setTimeout(() => setIsAnimating(false), 600);
-  };
-  
-  // Disable auto-sliding for now to avoid potential issues
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     nextSlide();
-  //   }, 6000);
-  //   return () => clearInterval(interval);
-  // }, [currentSlide]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [search, setSearch] = useState('');
+
+  // Filtered services based on category and search
+  const filteredServices = useMemo(() => {
+    return servicesData.filter(service => {
+      const matchesCategory = selectedCategory === 'All' || service.category === selectedCategory;
+      const matchesSearch = service.name.toLowerCase().includes(search.toLowerCase()) || (service.description && service.description.toLowerCase().includes(search.toLowerCase()));
+      return matchesCategory && matchesSearch;
+    });
+  }, [selectedCategory, search]);
 
   // Parallax effect for hero section
   const [scrollY, setScrollY] = useState(0);
   
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-    
+  const handleScroll = () => {
+    setScrollY(window.scrollY);
+  };
+  
+  React.useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -186,34 +119,60 @@ const Services = () => {
             </p>
           </div>
           
+          {/* Category filter and search bar */}
+          <div className="services-filter-bar">
+            <div className="categories">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  className={`category-btn${selectedCategory === cat ? ' active' : ''}`}
+                  onClick={() => setSelectedCategory(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            <input
+              type="text"
+              className="services-search"
+              placeholder="Search services..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+          </div>
           <div className="services-grid">
-            {services.map(service => (
-              <div className="service-card" key={service.id}>
-                <div className="service-image">
-                  <img src={service.image} alt={service.title} />
-                  <div className="image-overlay"></div>
-                  <div className="service-icon-wrapper">
-                    <service.icon size={32} className="service-icon-svg" />
+            {filteredServices.length === 0 && (
+              <div className="no-results">No services found.</div>
+            )}
+            {filteredServices.map(service => {
+              // Use Carbon icon components directly
+              const carbonIcons = {
+                Enterprise,
+                Finance,
+                DocumentSigned,
+                ChartNetwork,
+                Development
+              };
+              const Icon = carbonIcons[service.icon] || Enterprise;
+              return (
+                <Link to={`/services/${service.id}`} className="service-card animate-card" key={service.id}>
+                  <div className="service-image">
+                    <img src={service.image} alt={service.name} />
+                    <div className="image-overlay"></div>
+                    <div className="service-icon-wrapper">
+                      <Icon size={32} className="service-icon-svg" />
+                    </div>
                   </div>
-                </div>
-                <div className="service-content">
-                  <h3 className="service-title">{service.title}</h3>
-                  <p className="service-description">{service.description}</p>
-                  <ul className="service-features">
-                    {service.features.map((feature, index) => (
-                      <li key={index}>
-                        <span className="feature-bullet"></span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <Link to={service.link} className="btn-learn-more">
-                    Learn More 
-                    <ArrowRight size={20} />
-                  </Link>
-                </div>
-              </div>
-            ))}
+                  <div className="service-content">
+                    <h3 className="service-title">{service.name}</h3>
+                    <p className="service-description">{service.description}</p>
+                    <span className="btn-learn-more">
+                      Learn More <ArrowRight size={20} />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -15,6 +15,7 @@ import BrandingIdentity from '../pages/Services/BrandingIdentity/BrandingIdentit
 import DigitalMarketing from '../pages/Services/DigitalMarketing/DigitalMarketing';
 import FinancialServices from '../pages/Services/FinancialServices/FinancialServices';
 import LegalServices from '../pages/Services/LegalServices/LegalServices';
+import ServiceDetail from '../pages/Services/ServiceDetail';
 
 // NotFound component for 404 errors
 const NotFound = () => (
@@ -41,7 +42,8 @@ const AppRouter = () => (
     <Route path="/services/digital-marketing" element={<DigitalMarketing />} />
     <Route path="/services/financial-services" element={<FinancialServices />} />
     <Route path="/services/legal-services" element={<LegalServices />} />
-    
+    {/* Dynamic route for new scalable services */}
+    <Route path="/services/:id" element={<ServiceDetail />} />
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
